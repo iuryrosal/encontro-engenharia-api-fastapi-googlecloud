@@ -1,0 +1,48 @@
+version: '3.8'
+services:
+  postgres:
+    container_name: dev-database
+    hostname: postgres
+    restart: always
+    image: postgres:9.6
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=fakedata
+      - POSTGRES_PORT=5432
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    networks:
+      - mynet
+  fastapi:
+    container_name: apoenastack-api
+    build: 
+      context: ./cloudrun-apoenastack-api
+      dockerfile: Dockerfile
+    environment:
+      - ENV=dev
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../:/app
+    networks:
+      - mynet
+  streamlit_dashboard:
+    container_name: streamlit_dash
+    build: 
+      context: ./cloudrun-dashboard
+      dockerfile: Dockerfile
+    environment:
+      - ENV=dev
+    ports:
+      - "8501:8501"
+    volumes:
+      - ../:/app
+    networks:
+      - mynet
+
+networks:
+  mynet:
+    name: my-shared-db-network

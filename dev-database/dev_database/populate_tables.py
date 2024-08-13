@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine, MetaData
 from hashlib import sha256
 from faker import Faker
+import os
 import sys
 
 
@@ -12,9 +13,20 @@ class GenerateData:
 
     faker = Faker('pt_BR')
     metadata = MetaData()
-    engine = create_engine(
-        "postgresql://postgres:postgres@localhost:5432/fakedata"
-    )
+    if not os.getenv("ENV"):
+        raise Exception("Not ENV environment variable available")
+    if os.environ["ENV"] == "local":
+        database = "postgresql://postgres:postgres@localhost:5432/fakedata"
+        engine = create_engine(
+            database
+        )
+    elif os.environ["ENV"] == "dev":
+        database = "postgresql://postgres:postgres@host.docker.internal:5432/fakedata"
+        engine = create_engine(
+            database
+        )
+    else:
+        raise Exception(f"Value of ENV variable ({os.environ['ENV']}) invalid")
 
     def __init__(self):
         """

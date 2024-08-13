@@ -1,0 +1,5 @@
+cloudsql-prd-database/cloudrun-apoena-api-cred.json
+cloudsql-prd-database/.env
+
+cloudfuncton-generate-jwt-token/.env
+cloudfuncton-generate-jwt-token/env.yaml

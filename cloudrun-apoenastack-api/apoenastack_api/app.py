@@ -23,14 +23,12 @@ async def get_customer_by_cd(cd_customer):
 
 
 @app.get("/customers/", status_code=HTTPStatus.OK, response_model=list[Customer])
-async def get_customers(limit: int = 10, sg_state: str = None):
+async def get_customers(sg_state: str = None):
     if sg_state:
         queried_customers = database_session() \
                         .query(Customers) \
-                        .filter_by(sg_state=sg_state) \
-                        .limit(limit)
+                        .filter_by(sg_state=sg_state)
     else:
         queried_customers = database_session() \
-                            .query(Customers) \
-                            .limit(limit)
+                            .query(Customers)
     return queried_customers

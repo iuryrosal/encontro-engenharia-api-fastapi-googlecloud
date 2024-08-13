@@ -1,8 +1,20 @@
 from sqlalchemy import create_engine, MetaData, Column, String, Date, Table
+import os
 
 engine = create_engine(
     "postgresql://postgres:postgres@localhost:5432/fakedata"
 )
+
+if not os.getenv("ENV"):
+    raise Exception("Not ENV environment variable available")
+if os.environ["ENV"] == "local":
+    database = "postgresql://postgres:postgres@localhost:5432/fakedata"
+    engine = create_engine(database)
+elif os.environ["ENV"] == "dev":
+    database = "postgresql://postgres:postgres@host.docker.internal:5432/fakedata"
+    engine = create_engine(database)
+else:
+    raise Exception(f"Value of ENV variable ({os.environ['ENV']}) invalid")
 
 # Create a metadata object
 metadata = MetaData()

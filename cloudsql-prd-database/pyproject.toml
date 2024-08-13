@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "cloudsql-prd-database"
+version = "0.1.0"
+description = ""
+authors = ["Iury Rosal <iuryrosal@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+sqlalchemy = "^2.0.32"
+cloud-sql-python-connector = "^1.11.0"
+python-tds = "^1.15.0"
+psycopg2-binary = "^2.9.9"
+pg8000 = "^1.31.2"
+python-dotenv = "^1.0.1"
+faker = "^27.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

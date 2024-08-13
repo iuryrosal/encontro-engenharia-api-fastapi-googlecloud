@@ -67,9 +67,9 @@ def exchange_jwt_for_token(signed_jwt):
 
 
 def main():
-    if os.getenv("env", "dev") == "dev":
+    if os.getenv("env", "") == "local":
         load_dotenv()
-        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "test_api_apoena/credentials.json"
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "credentials.json"
 
     sm = SecretManager()
     credentials_of_api = json.loads(sm.access_secret(secret_id=os.getenv("secret_id"),

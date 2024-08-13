@@ -11,6 +11,5 @@ RUN touch README.md
 RUN poetry install --without dev
 
 EXPOSE 8080
-EXPOSE 5432
 
 ENTRYPOINT ["poetry", "run", "fastapi", "run", "apoenastack_api/app.py", "--port", "8080"]

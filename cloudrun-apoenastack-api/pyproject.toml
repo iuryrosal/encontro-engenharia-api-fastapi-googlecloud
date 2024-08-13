@@ -10,6 +10,9 @@ python = "^3.11"
 fastapi = {extras = ["all"], version = "^0.112.0"}
 sqlalchemy = "^2.0.32"
 psycopg2-binary = "^2.9.9"
+google-api-python-client = "^2.140.0"
+cloud-sql-python-connector = "0.9.3"
+python-tds = "^1.15.0"
 
 
 [build-system]
