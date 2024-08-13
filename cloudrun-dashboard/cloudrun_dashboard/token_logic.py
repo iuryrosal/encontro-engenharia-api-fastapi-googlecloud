@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 
 class SecretManager:
     def __init__(self) -> None:
-        self.project_id = os.getenv("project_id", None)
+        self.project_id = os.getenv("PROJECT_ID", None)
         self.client = secretmanager.SecretManagerServiceClient()
 
     def access_secret(self, secret_id, version_id):
@@ -66,16 +66,16 @@ def exchange_jwt_for_token(signed_jwt):
     return token_request.json()['id_token']
 
 
-def main():
-    if os.getenv("env", "") == "local":
-        load_dotenv()
-        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "credentials.json"
+def generate_token():
+    #if os.getenv("ENV") == "local":
+    load_dotenv()
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.getenv("CLOUDRUN_DASH")
 
     sm = SecretManager()
-    credentials_of_api = json.loads(sm.access_secret(secret_id=os.getenv("secret_id"),
+    credentials_of_api = json.loads(sm.access_secret(secret_id=os.getenv("SECRET_ID"),
                                                      version_id=1))
     jwt_token = create_signed_jwt(credentials_json=credentials_of_api,
-                                  run_service_url=os.getenv("cloudrun_url"))
+                                  run_service_url=os.getenv("CLOUDRUN_URL"))
     token = exchange_jwt_for_token(jwt_token)
 
     return token

@@ -30,7 +30,7 @@ class DatabaseClient:
                                     autoflush=False,
                                     bind=self.engine)
 
-    def __get_conn() -> pg8000.dbapi.Connection:
+    def __get_conn(self) -> pg8000.dbapi.Connection:
         project_id = os.getenv("PROJECT_ID", "")
         region = os.getenv("REGION", "southamerica-east1")
         instance = os.getenv("INSTANCE", "apoena-database")
