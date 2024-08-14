@@ -3,6 +3,7 @@ from http import HTTPStatus
 from apoenastack_api.schemas import Message, Customer
 from apoenastack_api.database.models import Customers
 from apoenastack_api.database.database_client import DatabaseClient
+from sqlalchemy import text
 
 app = FastAPI()
 
@@ -23,15 +24,11 @@ async def get_customer_by_cd(cd_customer):
     return queried_customer
 
 
-@app.get("/customers/", status_code=HTTPStatus.OK, response_model=list[Customer])
+@app.get("/customers/", status_code=HTTPStatus.OK)
 async def get_customers(sg_state: str = None):
-    database = DatabaseClient()
     print(f"GET /customers/?{sg_state=}")
-    if sg_state:
-        queried_customers = database() \
-            .query(Customers) \
-            .filter_by(sg_state=sg_state)
-    else:
-        queried_customers = database() \
-            .query(Customers)
-    return queried_customers
+    database = DatabaseClient()
+    with database.engine.connect() as conn:
+        result = conn.execute(text("select * from customers"))
+        print(result)
+    return "ok"
