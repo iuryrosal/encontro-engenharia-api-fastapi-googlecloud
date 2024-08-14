@@ -3,7 +3,8 @@ import pg8000
 import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from google.cloud.sql.connector import Connector, IPTypes
+from sqlalchemy import create_engine
+# from google.cloud.sql.connector import Connector, IPTypes
 
 
 class DatabaseClient:
@@ -28,9 +29,6 @@ class DatabaseClient:
                                     bind=self.engine)
         elif os.environ["ENV"] == "prd":
             self.engine = self.__get_conn()
-
-            with self.engine.connect() as conn:
-                self.metadata.reflect(conn)
         else:
             raise Exception(f"Value of ENV variable ({os.environ['ENV']}) invalid")
 
