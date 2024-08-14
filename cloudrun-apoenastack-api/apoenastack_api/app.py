@@ -28,7 +28,7 @@ async def get_customer_by_cd(cd_customer):
 async def get_customers(sg_state: str = None):
     print(f"GET /customers/?{sg_state=}")
     database = DatabaseClient()
+    customers_table = Customers()
     with database.engine.connect() as conn:
-        result = conn.execute(text("select * from customers"))
-        print(result)
-    return "ok"
+        results = conn.execute(customers_table.select())
+    return results
