@@ -3,7 +3,6 @@ import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from google.cloud.sql.connector import Connector, IPTypes
-import pg8000
 
 
 class DatabaseClient:
@@ -30,9 +29,8 @@ class DatabaseClient:
                                     autoflush=False,
                                     bind=self.engine)
 
-    def __get_conn(self) -> pg8000.dbapi.Connection:
+    def __get_conn(self):
         print("Chamada de Sessão da Base de Dados")
-        print("teste")
         project_id = os.getenv("PROJECT_ID", "")
         region = os.getenv("REGION", "southamerica-east1")
         instance = os.getenv("INSTANCE", "apoena-database")
@@ -47,7 +45,7 @@ class DatabaseClient:
 
         conn = connector.connect(
             instance_connection_name,
-            "psycopg2",
+            "postgresql+psycopg2",
             user=db_user,
             password=db_pass,
             db=db_name
