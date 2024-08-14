@@ -21,7 +21,7 @@ class DatabaseClient:
                 self.database
             )
         elif os.environ["ENV"] == "prd":
-            self.engine = create_engine("postgresql+pg8000://", creator=self.__get_conn)
+            self.engine = create_engine("postgresql+psycopg2://", creator=self.__get_conn)
 
         else:
             raise Exception(f"Value of ENV variable ({os.environ['ENV']}) invalid")
@@ -46,7 +46,7 @@ class DatabaseClient:
 
         conn = connector.connect(
             instance_connection_name,
-            "pg8000",
+            "psycopg2",
             user=db_user,
             password=db_pass,
             db=db_name
