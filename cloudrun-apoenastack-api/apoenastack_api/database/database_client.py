@@ -1,5 +1,6 @@
 import os
 import pg8000
+import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from google.cloud.sql.connector import Connector, IPTypes
@@ -26,7 +27,7 @@ class DatabaseClient:
                                     autoflush=False,
                                     bind=self.engine)
         elif os.environ["ENV"] == "prd":
-            self.engine = create_engine("postgresql+psycopg2://", creator=self.__get_conn)
+            self.engine = self.__get_conn()
 
             with self.engine.connect() as conn:
                 self.metadata.reflect(conn)
@@ -38,20 +39,18 @@ class DatabaseClient:
         project_id = os.getenv("PROJECT_ID", "")
         region = os.getenv("REGION", "southamerica-east1")
         instance = os.getenv("INSTANCE", "apoena-database")
-        instance_connection_name = f"{project_id}:{region}:{instance}"
+        unix_socket_path = f"/cloudsql/{project_id}:{region}:{instance}"
         db_user = os.getenv("DB_USER", "")
         db_pass = os.getenv("DB_PASS", "")
         db_name = os.getenv("DB_NAME", "")
 
-        ip_type = IPTypes.PRIVATE if os.environ.get("PRIVATE_IP") else IPTypes.PUBLIC
-
-        connector = Connector(ip_type)
-
-        conn = connector.connect(
-            instance_connection_name,
-            "pg8000",
-            user=db_user,
-            password=db_pass,
-            db=db_name
+        engine = sqlalchemy.create_engine(
+            sqlalchemy.engine.url.URL.create(
+                drivername="postgresql+pg8000",
+                username=db_user,
+                password=db_pass,
+                database=db_name,
+                query={"unix_sock": f"{unix_socket_path}/.s.PGSQL.5432"},
+            )
         )
-        return conn
+        return engine
