@@ -3,7 +3,7 @@ from http import HTTPStatus
 from apoenastack_api.schemas import Message, Customer
 from apoenastack_api.database.models import Customers
 from apoenastack_api.database.database_client import DatabaseClient
-from sqlalchemy import text
+from sqlalchemy.orm import Session
 
 app = FastAPI()
 
@@ -28,7 +28,7 @@ async def get_customer_by_cd(cd_customer):
 async def get_customers(sg_state: str = None):
     print(f"GET /customers/?{sg_state=}")
     database = DatabaseClient()
-    customers_table = Customers()
-    with database.engine.connect() as conn:
-        results = conn.execute(customers_table.select())
+    with Session(database.engine) as session:
+        results = session\
+            .query(Customers).all()
     return results

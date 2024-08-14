@@ -3,7 +3,6 @@ import pg8000
 import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine
 # from google.cloud.sql.connector import Connector, IPTypes
 
 
